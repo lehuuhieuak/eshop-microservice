@@ -1,18 +1,15 @@
 ﻿namespace Catalog.API.Products.GetProducts
 {
     public record GetProductsResult(IEnumerable<Product> Products);
+    public record GetProductQuery(int? PageNumber = 1, int? PageSize = 10) : IQuery<GetProductsResult>;
 
-    public record GetProductQuery() : IQuery<GetProductsResult>;
-
-    public class GetProductsQueryHandler(IDocumentSession session, ILogger<GetProductsQueryHandler> logger)
+    public class GetProductsQueryHandler(IDocumentSession session)
         : IQueryHandler<GetProductQuery, GetProductsResult>
     {
         public async Task<GetProductsResult> Handle(GetProductQuery query, CancellationToken cancellationToken)
         {
-            logger.LogInformation("GetProductQueryHandler.Handle called with {@Query}", query);
-
             var products = await session.Query<Product>()
-                .ToListAsync(cancellationToken);
+                .ToPagedListAsync(query.PageNumber ?? 1, query.PageSize ?? 10, cancellationToken);
 
             return new GetProductsResult(products);
         }
