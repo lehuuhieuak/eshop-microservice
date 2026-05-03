@@ -1,4 +1,6 @@
-﻿public static class OrderExtentions
+﻿namespace Ordering.Application.Extensions;
+
+public static class OrderExtentions
 {
     public static IEnumerable<OrderDto> ToOrderDtoList(this IEnumerable<Order> orders)
     {
@@ -13,7 +15,7 @@
                 LastName: order.ShippingAddress.LastName,
                 EmailAddress: order.ShippingAddress.EmailAddress,
                 AddressLine: order.ShippingAddress.AddressLine,
-                State: order.ShippingAddress.State
+                State: order.ShippingAddress.State,
                 ZipCode: order.ShippingAddress.ZipCode,
                 Country: order.ShippingAddress.Country
             ),
